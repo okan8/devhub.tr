@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kayıt ve Giriş - DevHub.tr</title>
+
+    <!-- Google Fonts için Poppins fontu (normal, 400 ağırlıklı) -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Turnstile JS -->
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;  /* Modern font */
+        }
+    </style>
+</head>
+
+<body class="bg-gradient-to-r from-black via-gray-900 to-black text-whitefont-poppins">
+
+    <!-- Navbar -->
+    <nav class="bg-black bg-opacity-50 backdrop-blur-md backdrop-blur-md  fixed top-0 w-full z-50">
+        <div class="container mx-auto flex justify-between items-center p-4">
+            <!-- Tıklanabilir DevHub.tr -->
+            <a href="/" class="text-3xl font-extrabold text-blue-600 hover:text-blue-800 transition-colors duration-300">
+                <img src="/static/assets/media/logo6.png" style="width: 200px; height: auto;">
+            </a>
+            <a href="/" id="button1" class="bg-transparent text-white py-2 px-6 rounded-full shadow-md border-2 border-blue-600 outline-none hover:outline-2 hover:outline-blue-600 transition-all transform ">
+                Hemen Başlayın
+            </a>
+        </div>
+    </nav>
+    <div class="flex items-center justify-center min-h-screen py-24 bg-gradient-to-r from-black via-gray-900 to-black">
+        <div class="bg-black bg-opacity-30 backdrop-blur-lg shadow-lg rounded-lg p-8 w-96 max-w-sm w-full">
+            <!-- Register Section -->
+            <div id="registerSection">
+                <h1 class="text-3xl font-semibold text-center mb-6 text-white">Kayıt Ol</h1>
+                <div class="mb-4">
+                    <label for="registerEmail" class="block text-white mb-2">E-posta:</label>
+                    <input type="email" id="registerEmail" required class="bg-transparent text-white rounded-lg px-4 py-2 w-full focus:outline-none focus:ring-0 transition-colors duration-300 border-b-2 border-gray-400 placeholder-gray-400">
+                </div>
+                <div class="mb-4">
+                    <label for="registerPassword" class="block text-white mb-2">Şifre:</label>
+                    <input type="password" id="registerPassword" required class="bg-transparent text-white rounded-lg px-4 py-2 w-full focus:outline-none focus:ring-0 transition-colors duration-300 border-b-2 border-gray-400 placeholder-gray-400" oninput="checkPasswordStrength()">
+                </div>
+                <div id="passwordCriteria" class="mb-4 text-gray-600 text-sm">
+                    <ul>
+                        <li id="minLength" class="text-red-500">En az 12 karakter olmalı.</li>
+                        <li id="uppercase" class="text-red-500">Bir büyük harf içermeli.</li>
+                        <li id="lowercase" class="text-red-500">Bir küçük harf içermeli.</li>
+                        <li id="number" class="text-red-500">Bir rakam içermeli.</li>
+                        <li id="specialChar" class="text-red-500">Bir özel karakter içermeli (!, @, #, $, vb.).</li>
+                    </ul>
+                </div>
+                <button id="registerButton" class="bg-transparent text-white px-6 py-3 rounded-none border-2 border-blue-500 hover:bg-blue-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300 w-full">
+                    <i class="fas fa-user-plus mr-2"></i> Hesap Oluştur
+                </button>
+                <p id="registerMessage" class="mt-4 text-red-500 text-center"></p>
+                <p id="generatedPassword" class="text-green-600 font-medium text-center hidden mt-4"></p>
+                <div class="text-center mt-4">
+                    <p class="text-gray-400">Zaten bir hesabınız var mı? <a href="#" id="showLogin" class="text-blue-500 hover:underline"><i class="fas fa-sign-in-alt mr-1"></i> Giriş yapın.</a></p>
+                </div>
+            </div>
+    
+            <!-- Login Section -->
+            <div id="loginSection" class="hidden mt-6">
+                <h2 class="text-xl font-semibold text-center mb-4 text-white">Giriş Yap</h2>
+                <div class="mb-4">
+                    <label for="loginEmail" class="block text-white mb-2">E-posta:</label>
+                    <input type="email" id="loginEmail" required class="bg-transparent text-white rounded-lg px-4 py-2 w-full focus:outline-none focus:ring-0 transition-colors duration-300 border-b-2 border-gray-400 placeholder-gray-400">
+                </div>
+                <div class="mb-4">
+                    <label for="loginPassword" class="block text-white mb-2">Şifre:</label>
+                    <input type="password" id="loginPassword" required class="bg-transparent text-white rounded-lg px-4 py-2 w-full focus:outline-none focus:ring-0 transition-colors duration-300 border-b-2 border-gray-400 placeholder-gray-400">
+                </div>
+                <button id="loginButton" class="bg-transparent text-white px-6 py-3 rounded-none border-2 border-blue-500 hover:bg-blue-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300 w-full">
+                    <i class="fas fa-sign-in-alt mr-2"></i> Giriş Yap
+                </button>
+                <p id="loginMessage" class="mt-4 text-red-500 text-center"></p>
+                <div class="text-center mt-4">
+                    <p class="text-gray-400">Hesabınız yok mu? <a href="#" id="showRegister" class="text-blue-500 hover:underline"><i class="fas fa-user-plus mr-1"></i> Kayıt Ol.</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer class="bg-gradient-to-r from-gray-900 to-gray-800 text-white py-6">
+        <div class="container mx-auto text-center md:text-left">
+            <!-- Üst kısım - İletişim ve Yapımcı Bilgisi -->
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <p class="mb-2 md:mb-0">İletişim: 
+                    <a href="mailto:destek@devhub.tr" class="text-blue-400 hover:underline">destek@devhub.tr</a>
+                </p>
+                <p>Made by 
+                    <a href="https://siberonculer.com" target="_blank" class="text-blue-400 hover:underline">Siber Öncüler</a>
+                </p>
+            </div>
+    
+            <!-- Sosyal Medya Bağlantıları -->
+            <div class="mt-4 flex justify-center space-x-6">
+                <a href="https://facebook.com" target="_blank" class="text-blue-400 hover:text-blue-500">
+                    <i class="fab fa-facebook-f text-2xl"></i> 
+                </a>
+                <a href="https://twitter.com" target="_blank" class="text-blue-400 hover:text-blue-500">
+                    <i class="fab fa-twitter text-2xl"></i>
+                </a>
+                <a href="https://instagram.com/siber_onculer" target="_blank" class="text-blue-400 hover:text-blue-500">
+                    <i class="fab fa-instagram text-2xl"></i>
+                </a>
+                <a href="https://linkedin.com" target="_blank" class="text-blue-400 hover:text-blue-500">
+                    <i class="fab fa-linkedin-in text-2xl"></i>
+                </a>
+            </div>
+    
+            <!-- Alt kısım - Telif Hakkı ve Gizlilik Politikası -->
+            <div class="mt-4 text-sm text-gray-400">
+                <p>&copy; 2024 DevHub. Tüm hakları saklıdır. | 
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="/static/assets/scripts/auth.js">
+        
+
+    </script>
+
+</body>
+
+</html>

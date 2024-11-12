@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="../static/assets/media/icon.png" type="image/png">
+
+    <!-- Google Fonts (use Poppins for a modern, clean look) -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+
+    <!-- Font Awesome for Icons (ensure icons load correctly) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <title>Kullanıcı Adı Ayarlama</title>
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-r from-black via-gray-900 to-black flex flex-col min-h-screen">
+
+    <!-- Navbar -->
+    <nav class="bg-black bg-opacity-50 backdrop-blur-md backdrop-blur-md  fixed top-0 w-full z-50">
+        <div class="container mx-auto flex justify-between items-center p-4">
+            <!-- Tıklanabilir DevHub.tr -->
+            <a href="/" class="text-3xl font-extrabold text-blue-600 hover:text-blue-800 transition-colors duration-300">
+                <img src="/static/assets/media/logo6.png" style="width: 200px; height: auto;">
+            </a>
+            <a href="/" id="button1" class="bg-transparent text-white py-2 px-6 rounded-full shadow-md border-2 border-blue-600 outline-none hover:outline-2 hover:outline-blue-600 transition-all transform ">
+                Hemen Başlayın
+            </a>
+        </div>
+    </nav>
+    
+
+    <!-- Main Container -->
+    <div class="flex items-center justify-center flex-grow py-8">
+        <div class="bg-black bg-opacity-40 backdrop-blur-md shadow-lg rounded-lg p-8 w-96 space-y-6">
+            <h1 class="text-3xl font-semibold text-center text-white">Kullanıcı Adı Ayarlama</h1> <!-- text-white eklendi -->
+            <div class="flex items-center mb-6">
+                <span class="text-white text-lg font-semibold">devhub.tr/@</span> <!-- text-white eklendi -->
+                <input type="text" id="username" placeholder="Yeni kullanıcı adınızı girin..." required class="border  bg-transparent border-gray-300 rounded px-4 py-2 w-full focus:outline-none focus:ring-2 text-white focus:ring-blue-500 ml-2">
+            </div>
+    
+            <!-- Set Username Button -->
+ 
+            <div class="flex justify-center">
+                <button id="setUsernameButton" class="bg-transparent border-2 border-white text-white p-3 rounded-lg hover:bg-white hover:text-black transition duration-200">
+                    <i class="fas fa-check-circle"></i>
+                    Kullanıcı Adı Ayarla
+                </button>
+            </div>
+            <!-- Error Message -->
+            <p id="setUsernameMessage" class="text-red-500 text-center mt-4"></p>
+        </div>
+    </div>
+    
+    <!-- JavaScript -->
+    <script>
+        document.getElementById('setUsernameButton').addEventListener('click', async () => {
+            const username = document.getElementById('username').value;
+
+            try {
+                const response = await fetch('/set_username', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ username }),
+                });
+
+                const result = await response.json();
+                if (response.ok) {
+                    // Redirect to dashboard after setting username
+                    window.location.href = '/dashboard';
+                } else {
+                    document.getElementById('setUsernameMessage').textContent = `Hata: ${result.message}`;
+                }
+            } catch (error) {
+                document.getElementById('setUsernameMessage').textContent = 'Bir hata oluştu.';
+            }
+        });
+    </script>
+
+</body>
+</html>
